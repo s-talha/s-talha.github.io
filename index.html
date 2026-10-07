@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Talha S. | AI Engineer</title>
+  <meta name="description" content="Talha S. is a senior software engineer in Stockholm building AI agents that use real tools, explain their decisions and fail safely.">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#080812">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Talha S. | AI Engineer">
+  <meta property="og:description" content="AI agents that do the work, and show their work.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://s-talha.github.io/">
+  <meta property="og:image" content="https://s-talha.github.io/assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080812;
+      --surface: #11111f;
+      --surface-2: #171729;
+      --purple: #8b5cf6;
+      --pink: #ec4899;
+      --cyan: #22d3ee;
+      --white: #f8fafc;
+      --soft: #cbd5e1;
+      --faint: #94a3b8;
+      --line: rgba(248, 250, 252, 0.08);
+      --line-strong: rgba(248, 250, 252, 0.14);
+      --grad: linear-gradient(90deg, var(--purple), var(--pink) 55%, var(--cyan));
+      --display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+      --body: "Manrope", ui-sans-serif, system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --wrap: 1120px;
+      --radius: 16px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--soft);
+      font: 400 17px/1.65 var(--body);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    /* Faint blueprint grid plus a still aurora at the top. Both are static, so scrolling stays cheap. */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 40%, transparent 100%);
+      opacity: 0.55;
+    }
+    .aurora {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 900px;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(40% 50% at 18% 8%, rgba(139, 92, 246, 0.22), transparent 70%),
+        radial-gradient(30% 40% at 58% 0%, rgba(236, 72, 153, 0.13), transparent 70%),
+        radial-gradient(35% 50% at 92% 22%, rgba(34, 211, 238, 0.14), transparent 70%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; border-radius: 6px; }
+    .wrap { width: min(var(--wrap), 100% - 32px); margin-inline: auto; }
+    .skip { position: absolute; left: -999px; top: 8px; background: var(--white); color: var(--bg); padding: 8px 12px; border-radius: 8px; z-index: 100; }
+    .skip:focus { left: 16px; }
+
+    /* ---------- header ---------- */
+    header.top {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(8, 8, 18, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+    }
+    .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; font: 700 18px/1 var(--display); color: var(--white); }
+    .mark {
+      display: grid; place-items: center;
+      width: 32px; height: 32px; border-radius: 9px;
+      background: var(--grad);
+      color: var(--bg); font: 800 13px/1 var(--display); letter-spacing: 0.02em;
+    }
+    nav.links { display: flex; gap: 4px; }
+    nav.links a {
+      padding: 8px 12px; border-radius: 8px;
+      color: var(--faint); font-size: 15px; font-weight: 500;
+      transition: color .15s, background-color .15s;
+    }
+    nav.links a:hover { color: var(--white); background: rgba(248, 250, 252, 0.05); }
+    nav.links a.active { color: var(--white); }
+    .menu-btn { display: none; }
+
+    /* ---------- hero ---------- */
+    .hero { position: relative; padding: 88px 0 96px; }
+    .hero .wrap { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 7px 14px 7px 12px; border-radius: 999px;
+      border: 1px solid var(--line-strong); background: rgba(17, 17, 31, 0.7);
+      font-size: 14px; color: var(--soft);
+    }
+    .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.15); }
+    h1 {
+      margin: 26px 0 0;
+      font: 800 clamp(42px, 6.4vw, 76px)/0.98 var(--display);
+      letter-spacing: -0.035em;
+      color: var(--white);
+      text-wrap: balance;
+    }
+    h1 .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .role { margin: 28px 0 6px; font: 600 20px/1.4 var(--body); color: var(--white); }
+    .focus { margin: 0; font-size: 15px; color: var(--faint); }
+    .focus span { white-space: nowrap; }
+    .focus span + span::before { content: "/"; margin: 0 10px; color: rgba(148, 163, 184, 0.5); }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      height: 48px; padding: 0 22px; border-radius: 12px;
+      font: 600 15px/1 var(--body);
+      border: 1px solid var(--line-strong); color: var(--white); background: rgba(17, 17, 31, 0.8);
+      transition: border-color .15s, transform .15s;
+    }
+    .btn:hover { border-color: rgba(248, 250, 252, 0.3); }
+    .btn.primary { border: 0; background: var(--grad); color: #0b0614; }
+    .btn.primary:hover { transform: translateY(-1px); }
+    .btn svg { width: 18px; height: 18px; }
+
+    /* agent run card */
+    .run {
+      position: relative;
+      margin: 0;
+      border-radius: 20px;
+      background: linear-gradient(var(--surface), var(--surface)) padding-box, linear-gradient(140deg, rgba(139,92,246,.6), rgba(236,72,153,.35), rgba(34,211,238,.55)) border-box;
+      border: 1px solid transparent;
+      box-shadow: 0 30px 80px -30px rgba(139, 92, 246, 0.45);
+      overflow: hidden;
+    }
+    .run-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+    .lights { display: flex; gap: 6px; }
+    .lights i { width: 9px; height: 9px; border-radius: 50%; background: rgba(248,250,252,.16); }
+    .run-file { font: 500 13px/1 var(--mono); color: var(--faint); }
+    .run-task { padding: 16px 20px 6px; font-size: 14px; color: var(--faint); }
+    .run-task b { display: block; margin-top: 4px; font-weight: 600; color: var(--white); font-size: 15px; }
+    ol.steps { list-style: none; margin: 0; padding: 14px 20px 6px; position: relative; }
+    ol.steps::before { content: ""; position: absolute; left: 37px; top: 30px; bottom: 34px; width: 1px; background: var(--line-strong); }
+    .step { position: relative; display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: start; padding: 9px 0; opacity: 0.38; transition: opacity .3s; }
+    .step.on { opacity: 1; }
+    .icon {
+      position: relative; z-index: 1;
+      display: grid; place-items: center;
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--surface-2); border: 1px solid var(--line-strong); color: var(--faint);
+    }
+    .icon svg { width: 17px; height: 17px; }
+    .step[data-kind="model"].on .icon { color: var(--purple); border-color: rgba(139,92,246,.5); }
+    .step[data-kind="tool"].on .icon { color: var(--pink); border-color: rgba(236,72,153,.5); }
+    .step[data-kind="result"].on .icon { color: var(--cyan); border-color: rgba(34,211,238,.5); }
+    .step[data-kind="rule"].on .icon { color: var(--white); border-color: rgba(248,250,252,.4); }
+    .step-title { color: var(--white); font-weight: 600; font-size: 15px; line-height: 1.3; }
+    .step-detail { margin-top: 3px; font: 400 12.5px/1.45 var(--mono); color: var(--faint); word-break: break-word; }
+    .state { font: 500 11.5px/1 var(--mono); padding-top: 4px; color: rgba(148,163,184,.6); white-space: nowrap; }
+    .state.done { color: #34d399; }
+    .state.running { color: var(--cyan); }
+    .run-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 20px 16px; border-top: 1px solid var(--line); }
+    .verdict { font: 500 13px/1.3 var(--mono); color: var(--faint); }
+    .verdict.ok { color: #34d399; }
+    .verdict.esc { color: var(--pink); }
+    .again {
+      font: 600 13px/1 var(--mono); color: var(--white);
+      padding: 9px 14px; border-radius: 9px;
+      border: 1px solid var(--line-strong); background: transparent; cursor: pointer;
+      white-space: nowrap; flex: none;
+    }
+    .again:hover { border-color: rgba(248,250,252,.35); }
+    .again:disabled { opacity: .45; cursor: default; }
+
+    /* ---------- sections ---------- */
+    section.block { padding: 104px 0; border-top: 1px solid var(--line); }
+    .kicker { font: 500 14px/1 var(--mono); color: var(--cyan); margin: 0 0 18px; }
+    h2 {
+      margin: 0;
+      font: 700 clamp(32px, 4.4vw, 52px)/1.05 var(--display);
+      letter-spacing: -0.03em; color: var(--white);
+      text-wrap: balance; max-width: 18ch;
+    }
+    .lede { margin: 18px 0 0; max-width: 60ch; color: var(--faint); font-size: 18px; }
+    h3 { margin: 0; font: 700 21px/1.25 var(--display); color: var(--white); letter-spacing: -0.01em; }
+
+    /* about */
+    .about { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: start; }
+    .about p { margin: 0 0 18px; max-width: 62ch; }
+    ul.principles { list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 18px; }
+    ul.principles li { display: grid; grid-template-columns: 22px 1fr; gap: 14px; }
+    ul.principles svg { width: 20px; height: 20px; margin-top: 3px; color: var(--purple); }
+    ul.principles b { color: var(--white); font-weight: 600; }
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 72px; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(17,17,31,.6); }
+    .fact { padding: 28px 28px 26px; }
+    .fact + .fact { border-left: 1px solid var(--line); }
+    .fact .n { font: 800 48px/1 var(--display); color: var(--white); letter-spacing: -0.03em; }
+    .fact .n em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .fact p { margin: 10px 0 0; font-size: 15px; color: var(--faint); max-width: 26ch; }
+
+    /* expertise */
+    .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-top: 52px; }
+    .card {
+      grid-column: span 2;
+      padding: 26px; border-radius: var(--radius);
+      background: rgba(17, 17, 31, 0.72); border: 1px solid var(--line);
+    }
+    .card.wide { grid-column: span 3; }
+    .card-head { display: flex; align-items: center; gap: 12px; }
+    .card-head svg { width: 22px; height: 22px; flex: none; }
+    .card[data-tone="purple"] .card-head svg { color: var(--purple); }
+    .card[data-tone="pink"] .card-head svg { color: var(--pink); }
+    .card[data-tone="cyan"] .card-head svg { color: var(--cyan); }
+    .card p { margin: 12px 0 18px; font-size: 15.5px; color: var(--faint); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .chips li { padding: 5px 11px; border-radius: 8px; border: 1px solid var(--line-strong); font-size: 13.5px; color: var(--soft); background: rgba(8, 8, 18, 0.5); }
+
+    /* process */
+    .process { display: grid; grid-template-columns: 300px 1fr; gap: 40px; margin-top: 52px; align-items: start; }
+    .stages { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .stages button {
+      width: 100%; display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: 12px; border: 1px solid transparent; background: transparent;
+      color: var(--faint); font: 600 16px/1.2 var(--body); text-align: left; cursor: pointer;
+    }
+    .stages button span { font: 500 13px/1 var(--mono); color: rgba(148,163,184,.6); }
+    .stages button:hover { color: var(--white); }
+    .stages button[aria-selected="true"] { background: rgba(17,17,31,.9); border-color: var(--line-strong); color: var(--white); }
+    .stages button[aria-selected="true"] span { color: var(--cyan); }
+    .stage-panel { padding: 34px; border-radius: 20px; background: rgba(17,17,31,.72); border: 1px solid var(--line); min-height: 280px; }
+    .stage-panel p { margin: 14px 0 0; max-width: 60ch; }
+    .stage-panel ul { margin: 22px 0 0; padding-left: 20px; color: var(--faint); }
+    .stage-panel li + li { margin-top: 8px; }
+    .stage-panel li::marker { color: var(--pink); }
+
+    /* projects */
+    .projects { display: grid; gap: 24px; margin-top: 52px; }
+    .project { display: grid; grid-template-columns: 1.15fr 0.85fr; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); background: rgba(17,17,31,.72); }
+    .project.flip { grid-template-columns: 0.85fr 1.15fr; }
+    .project.flip .media { order: 2; }
+    .media { background: #0d0d1a; display: grid; place-items: center; border-right: 1px solid var(--line); min-height: 260px; }
+    .project.flip .media { border-right: 0; border-left: 1px solid var(--line); }
+    .media img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; }
+    .body { padding: 34px; display: flex; flex-direction: column; }
+    .meta { font: 500 13px/1 var(--mono); color: var(--faint); margin-bottom: 12px; }
+    .body p { margin: 14px 0 0; font-size: 16px; }
+    .body ul.points { margin: 16px 0 22px; padding-left: 20px; color: var(--faint); font-size: 15.5px; }
+    .body ul.points li + li { margin-top: 6px; }
+    .body ul.points li::marker { color: var(--purple); }
+    .body .chips { margin-top: auto; }
+    .repo { display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font-weight: 600; color: var(--white); width: fit-content; border-bottom: 1px solid rgba(248,250,252,.25); padding-bottom: 2px; }
+    .repo:hover { border-color: var(--cyan); }
+    .triage-visual { width: 100%; height: 100%; padding: 28px; display: grid; align-content: center; gap: 12px; font: 500 13px/1.4 var(--mono); }
+    .tv-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--soft); }
+    .tv-row small { display: block; color: var(--faint); font-size: 11.5px; margin-top: 3px; }
+    .tag { padding: 4px 9px; border-radius: 7px; font-size: 11.5px; white-space: nowrap; }
+    .tag.auto { color: #34d399; background: rgba(52,211,153,.1); }
+    .tag.human { color: var(--pink); background: rgba(236,72,153,.12); }
+    .tag.retry { color: var(--cyan); background: rgba(34,211,238,.1); }
+
+    /* contact */
+    .contact { text-align: center; padding: 120px 0 72px; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
+    .contact::before {
+      content: ""; position: absolute; inset: auto -10% -60% -10%; height: 120%; z-index: -1;
+      background: radial-gradient(40% 45% at 30% 60%, rgba(139,92,246,.22), transparent 70%), radial-gradient(35% 45% at 70% 65%, rgba(34,211,238,.16), transparent 70%), radial-gradient(30% 40% at 50% 80%, rgba(236,72,153,.14), transparent 70%);
+    }
+    .contact h2 { margin-inline: auto; max-width: 16ch; }
+    .contact .lede { margin-inline: auto; }
+    .contact .cta { justify-content: center; }
+    footer { padding: 28px 0 40px; border-top: 1px solid var(--line); color: var(--faint); font-size: 14px; }
+    footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+    /* ---------- responsive ---------- */
+    @media (max-width: 980px) {
+      .hero .wrap, .about, .process, .project, .project.flip { grid-template-columns: 1fr; }
+      .project.flip .media { order: 0; border-left: 0; }
+      .media { border-right: 0; border-bottom: 1px solid var(--line); }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .card, .card.wide { grid-column: span 1; }
+      .stages { grid-template-columns: repeat(3, 1fr); }
+      .stages button { grid-template-columns: 1fr; gap: 4px; padding: 10px 12px; }
+      .hero { padding-top: 56px; }
+    }
+    @media (max-width: 760px) {
+      nav.links {
+        display: none; position: absolute; top: 64px; left: 0; right: 0;
+        flex-direction: column; padding: 8px 16px 16px; background: rgba(8,8,18,.97); border-bottom: 1px solid var(--line);
+      }
+      nav.links.open { display: flex; }
+      nav.links a { padding: 12px; font-size: 16px; }
+      .menu-btn {
+        display: grid; place-items: center; width: 42px; height: 42px; border-radius: 10px;
+        border: 1px solid var(--line-strong); background: transparent; color: var(--white); cursor: pointer;
+      }
+      .grid { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
+      .fact + .fact { border-left: 0; border-top: 1px solid var(--line); }
+      section.block { padding: 80px 0; }
+      .stages { grid-template-columns: 1fr 1fr; }
+      .stage-panel, .body { padding: 24px; }
+      .step { grid-template-columns: 36px 1fr; }
+      .state { grid-column: 2; padding-top: 0; }
+      body { font-size: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="aurora" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Talha S., back to top"><span class="mark" aria-hidden="true">TS</span>Talha S.</a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="links" id="nav" aria-label="Sections">
+        <a href="#about">About</a>
+        <a href="#build">What I build</a>
+        <a href="#process">How I work</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap">
+        <div>
+          <span class="pill"><span class="dot" aria-hidden="true"></span>Stockholm, Sweden. Open to AI engineering work</span>
+          <h1>AI agents that do the work, <span class="grad">and show their work.</span></h1>
+          <p class="role">Senior software engineer building AI agents</p>
+          <p class="focus"><span>Agents and tool use</span><span>LLM evaluation</span><span>Backend and data</span></p>
+          <div class="cta">
+            <a class="btn primary" href="#projects">See my projects</a>
+            <a class="btn" href="https://github.com/s-talha">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.38-5.26 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+              GitHub
+            </a>
+          </div>
+        </div>
+
+        <figure class="run" aria-labelledby="run-caption">
+          <div class="run-head">
+            <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="run-file" id="run-caption">support-agent.run</span>
+          </div>
+          <p class="run-task">Customer message <b id="task-text">"Can I get a refund for order A-1042?"</b></p>
+          <ol class="steps" id="steps" aria-live="polite"></ol>
+          <div class="run-foot">
+            <span class="verdict" id="verdict">ready</span>
+            <button class="again" id="again" type="button">Run again</button>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block" id="about">
+      <div class="wrap">
+        <div class="about">
+          <div>
+            <p class="kicker">about</p>
+            <h2>An engineer who ships, now building with LLMs.</h2>
+          </div>
+          <div>
+            <p>I've spent 18 years building production software: backend services, cloud data pipelines, web apps, and the test suites that keep them honest. I've shipped systems for healthcare, finance, banking and SaaS.</p>
+            <p>Now I build AI agents. These are LLM apps that call real tools, make decisions you can audit, and fail safely when the model gets it wrong. My testing background shapes how I build them: I measure them like any other system before I trust them.</p>
+            <ul class="principles">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>The model suggests, code decides.</b> LLMs classify and draft. Anything with real consequences goes through rules you can read and test.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Every run is traceable.</b> You can open any answer and see the steps, tool calls and inputs behind it.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>It runs without keys.</b> My projects include a demo mode, so anyone can clone and try them in a minute.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span><b>Tested like production.</b> Unit tests for the logic, end-to-end tests for the flows, CI on every push.</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="facts">
+          <div class="fact"><div class="n">18<em>+</em></div><p>Years building and shipping production software</p></div>
+          <div class="fact"><div class="n">4</div><p>Industries served: healthcare, finance, banking and SaaS</p></div>
+          <div class="fact"><div class="n">0</div><p>API keys needed to try my projects</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="build">
+      <div class="wrap">
+        <p class="kicker">what I build</p>
+        <h2>Where I add the most value.</h2>
+        <p class="lede">Grouped by the problem it solves, not by logo.</p>
+        <div class="grid">
+          <article class="card wide" data-tone="purple">
+            <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg><h3>AI agents and tool use</h3></div>
+            <p>Agents that call your real systems through typed tools, with step limits, retries and a full trace of every decision.</p>
+            <ul class="chips"><li>Anthropic API</li><li>OpenAI API</li><li>Tool calling</li><li>Agent loops</li><li>Streaming</li></ul>
+          </article>
+          <article class="card wide" data-tone="pink">
+            <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg><h3>Testing and evaluating AI</h3></div>
+            <p>Regression suites for prompts and agents, deterministic demo models for CI, and guardrails that keep a wrong answer from becoming a wrong action.</p>
+            <ul class="chips"><li>Evals</li><li>Guardrails</li><li>Playwright</li><li>Selenium</li><li>Vitest</li><li>pytest</li></ul>
+          </article>
+          <article class="card" data-tone="cyan">
+            <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3M13 6l-2 12"/></svg><h3>Backend and APIs</h3></div>
+            <p>Services and APIs that stay boring in production.</p>
+            <ul class="chips"><li>Java</li><li>Spring Boot</li><li>Python</li><li>Node.js</li><li>C# / .NET</li><li>REST</li></ul>
+          </article>
+          <article class="card" data-tone="purple">
+            <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6"/></svg><h3>Data and cloud</h3></div>
+            <p>Streaming pipelines and warehouses that hold up at millions of rows a day.</p>
+            <ul class="chips"><li>Google Cloud</li><li>BigQuery</li><li>Dataflow</li><li>Pub/Sub</li><li>PostgreSQL</li><li>MongoDB</li></ul>
+          </article>
+          <article class="card" data-tone="pink">
+            <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg><h3>Web and delivery</h3></div>
+            <p>Front ends people can use, shipped through pipelines that test every push.</p>
+            <ul class="chips"><li>TypeScript</li><li>React</li><li>Next.js</li><li>Angular</li><li>Docker</li><li>Kubernetes</li><li>GitHub Actions</li></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="process">
+      <div class="wrap">
+        <p class="kicker">how I work</p>
+        <h2>From a messy workflow to an agent you can trust.</h2>
+        <p class="lede">Six stages. The evaluation stage is the one most AI projects skip.</p>
+        <div class="process">
+          <div class="stages" role="tablist" aria-label="Stages" id="stages"></div>
+          <div class="stage-panel" role="tabpanel" id="stage-panel" tabindex="0"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="projects">
+      <div class="wrap">
+        <p class="kicker">projects</p>
+        <h2>Open source, built to be cloned and run.</h2>
+        <p class="lede">Each project runs in a demo mode without an API key, and has tests in CI.</p>
+        <div class="projects">
+          <article class="project">
+            <div class="media"><img src="assets/agentdeck-demo.gif" alt="An Agentdeck run streaming in: the agent calls a calculator tool, gets the result and answers" loading="lazy" width="880" height="608"></div>
+            <div class="body">
+              <span class="meta">Next.js, TypeScript, PostgreSQL</span>
+              <h3>Agentdeck</h3>
+              <p>Build AI agents with tools, run them, and watch every step they take. Model turns and tool calls stream in live, and every run is saved as a replayable trace.</p>
+              <ul class="points">
+                <li>Agent loop that recovers from tool errors on its own</li>
+                <li>Server-Sent Events streaming, with every step stored in Postgres</li>
+                <li>Unit and end-to-end tests in CI, including a check that users can't see each other's agents</li>
+              </ul>
+              <ul class="chips"><li>Next.js</li><li>Prisma</li><li>Auth.js</li><li>Playwright</li></ul>
+              <a class="repo" href="https://github.com/s-talha/agentdeck">View on GitHub</a>
+            </div>
+          </article>
+          <article class="project flip">
+            <div class="media">
+              <div class="triage-visual" aria-hidden="true">
+                <div class="tv-row"><span>"How do I export my invoices?"<small>how_to, low risk</small></span><span class="tag auto">auto reply</span></div>
+                <div class="tv-row"><span>"I will take legal action"<small>legal threat, sensitive</small></span><span class="tag human">to a person</span></div>
+                <div class="tv-row"><span>"Charged twice this month"<small>classifier timeout, retried</small></span><span class="tag retry">retry, then route</span></div>
+              </div>
+            </div>
+            <div class="body">
+              <span class="meta">Python, Flask</span>
+              <h3>AI Support Ticket Triage Agent</h3>
+              <p>Reads incoming support tickets, classifies them with an LLM, and decides whether to answer automatically or hand off to a person.</p>
+              <ul class="points">
+                <li>Routing rules are plain code, not the model, so they can be tested and audited</li>
+                <li>Retries with backoff, and a ticket goes to a human if classification fails</li>
+                <li>Step-by-step reasoning trace for every decision</li>
+              </ul>
+              <ul class="chips"><li>Python</li><li>Flask</li><li>Anthropic</li><li>OpenAI</li></ul>
+              <a class="repo" href="https://github.com/s-talha/support-triage-agent-source">View on GitHub</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <p class="kicker">contact</p>
+        <h2>Have a workflow an agent should handle?</h2>
+        <p class="lede">I'm open to new projects and roles, remote or in Stockholm. Tell me about the process you want to automate.</p>
+        <div class="cta">
+          <a class="btn primary" href="https://github.com/s-talha">Find me on GitHub</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Talha S., Stockholm</span>
+      <span>Built by hand. Hosted on GitHub Pages.</span>
+    </div>
+  </footer>
+
+  <script>
+    (() => {
+      // ---------- hero agent run ----------
+      const icons = {
+        model: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>',
+        tool: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-4 3 4 3M16 9l4 3-4 3"/></svg>',
+        result: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12h8M8 8h8M8 16h5"/></svg>',
+        rule: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>',
+      };
+      const runs = [
+        {
+          task: '"Can I get a refund for order A-1042?"',
+          steps: [
+            ["model", "Model plans", "look up the order, then check the refund policy"],
+            ["tool", "Calls get_order", 'get_order("A-1042")'],
+            ["result", "Order found", "delivered 32 days ago, 1,290 kr"],
+            ["rule", "Policy check", "refunds need delivery within 30 days"],
+            ["model", "Model drafts", "internal note with the order history"],
+          ],
+          verdict: ["esc", "escalated to a person: outside the refund window"],
+        },
+        {
+          task: '"Where is my order B-2207?"',
+          steps: [
+            ["model", "Model plans", "find the order and its shipment"],
+            ["tool", "Calls get_order", 'get_order("B-2207")'],
+            ["result", "Order found", "shipped 2 days ago, PostNord 4471"],
+            ["rule", "Policy check", "tracking questions can be auto-answered"],
+            ["model", "Model drafts", "reply with the tracking link"],
+          ],
+          verdict: ["ok", "answered automatically in 1.8 s"],
+        },
+      ];
+      const list = document.getElementById("steps");
+      const verdict = document.getElementById("verdict");
+      const again = document.getElementById("again");
+      const taskText = document.getElementById("task-text");
+      const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let which = 0;
+      let timers = [];
+
+      function render(run) {
+        taskText.textContent = run.task;
+        list.innerHTML = "";
+        run.steps.forEach(([kind, title, detail]) => {
+          const li = document.createElement("li");
+          li.className = "step";
+          li.dataset.kind = kind;
+          li.innerHTML = `<span class="icon" aria-hidden="true">${icons[kind]}</span><div><div class="step-title"></div><div class="step-detail"></div></div><span class="state">queued</span>`;
+          li.querySelector(".step-title").textContent = title;
+          li.querySelector(".step-detail").textContent = detail;
+          list.appendChild(li);
+        });
+      }
+
+      function finish(run) {
+        list.querySelectorAll(".step").forEach((li) => { li.classList.add("on"); const s = li.querySelector(".state"); s.textContent = "done"; s.className = "state done"; });
+        verdict.textContent = run.verdict[1];
+        verdict.className = "verdict " + run.verdict[0];
+        again.disabled = false;
+      }
+
+      function play() {
+        timers.forEach(clearTimeout);
+        timers = [];
+        const run = runs[which];
+        render(run);
+        again.disabled = true;
+        verdict.className = "verdict";
+        if (reduce) { finish(run); return; }
+        verdict.textContent = "running";
+        const items = [...list.children];
+        items.forEach((li, i) => {
+          timers.push(setTimeout(() => {
+            if (i > 0) { const prev = items[i - 1].querySelector(".state"); prev.textContent = "done"; prev.className = "state done"; }
+            li.classList.add("on");
+            const s = li.querySelector(".state"); s.textContent = "running"; s.className = "state running";
+          }, 450 + i * 750));
+        });
+        timers.push(setTimeout(() => finish(run), 450 + items.length * 750));
+      }
+
+      again.addEventListener("click", () => { which = (which + 1) % runs.length; play(); });
+      play();
+
+      // ---------- how I work ----------
+      const stages = [
+        ["Understand", "Start from the work, not the model.", "I sit with the people who do the task today and map the real workflow: inputs, decisions, exceptions, and what a mistake costs.", ["Where the time goes, and what can safely be automated", "Which decisions need a person, by law or by risk", "A short written goal everyone signs off on"]],
+        ["Design", "Decide what the model does, and what it never does.", "The model gets narrow jobs like classifying, extracting and drafting. Business rules stay in code. Tools get typed inputs and least-privilege access.", ["Tool contracts with validated, typed inputs", "Guardrails and escalation paths written down first", "A demo mode, so the design can be tried with no keys"]],
+        ["Build", "Small, typed, observable pieces.", "I build the agent loop, the tools and the interface in small steps, with every model turn and tool call traced from day one.", ["Agent loop with step limits and retries", "Structured logs and traces for every run", "Clean APIs the rest of your stack can call"]],
+        ["Evaluate", "Measure it like any other system.", "Before anyone relies on it, the agent runs against a test set of real cases. Accuracy, cost and latency are tracked, and a bad prompt change fails the build.", ["Eval sets built from real, anonymised cases", "Checks in CI, not one-off spot tests", "Failure analysis that feeds back into the design"]],
+        ["Ship", "Release in steps, with a way back.", "Agents go live behind a flag, first in shadow mode next to people, then on a share of traffic, with a clear owner and a rollback.", ["Shadow mode, then a gradual rollout", "Human review queue for edge cases", "Docker and CI so every release is repeatable"]],
+        ["Observe", "Keep watching after launch.", "Models, prompts and data drift. Monitoring catches it early, and new failure cases go straight into the eval set.", ["Dashboards for quality, cost and latency", "Alerts on unusual escalations or errors", "A growing regression suite from real traffic"]],
+      ];
+      const tabs = document.getElementById("stages");
+      const panel = document.getElementById("stage-panel");
+      stages.forEach(([name], i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.role = "tab";
+        b.id = "stage-tab-" + i;
+        b.setAttribute("aria-controls", "stage-panel");
+        b.innerHTML = `<span>0${i + 1}</span>${name}`;
+        b.addEventListener("click", () => select(i));
+        b.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); select((i + 1) % stages.length, true); }
+          if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); select((i - 1 + stages.length) % stages.length, true); }
+        });
+        tabs.appendChild(b);
+      });
+      function select(i, focus) {
+        [...tabs.children].forEach((b, j) => { b.setAttribute("aria-selected", String(i === j)); b.tabIndex = i === j ? 0 : -1; });
+        const [, title, text, points] = stages[i];
+        panel.setAttribute("aria-labelledby", "stage-tab-" + i);
+        panel.innerHTML = `<h3></h3><p></p><ul>${points.map(() => "<li></li>").join("")}</ul>`;
+        panel.querySelector("h3").textContent = title;
+        panel.querySelector("p").textContent = text;
+        panel.querySelectorAll("li").forEach((li, k) => (li.textContent = points[k]));
+        if (focus) tabs.children[i].focus();
+      }
+      select(0);
+
+      // ---------- nav ----------
+      const nav = document.getElementById("nav");
+      const menu = document.querySelector(".menu-btn");
+      menu.addEventListener("click", () => {
+        const open = nav.classList.toggle("open");
+        menu.setAttribute("aria-expanded", String(open));
+        menu.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      });
+      nav.addEventListener("click", (e) => { if (e.target.closest("a")) { nav.classList.remove("open"); menu.setAttribute("aria-expanded", "false"); } });
+      const links = [...nav.querySelectorAll("a")];
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + en.target.id));
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      ["about", "build", "process", "projects", "contact"].forEach((id) => io.observe(document.getElementById(id)));
+    })();
+  </script>
+</body>
+</html>
