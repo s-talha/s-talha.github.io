@@ -126,7 +126,7 @@
     }
     h1 .grad { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
     .role { margin: 28px 0 6px; font: 600 20px/1.4 var(--body); color: var(--white); }
-    .focus { margin: 0; font-size: 15px; color: var(--faint); }
+    .focus { margin: 0; font-size: 15px; color: var(--faint); display: flex; flex-wrap: wrap; row-gap: 4px; }
     .focus span { white-space: nowrap; }
     .focus span + span::before { content: "/"; margin: 0 10px; color: rgba(148, 163, 184, 0.5); }
     .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 36px; }
@@ -271,11 +271,28 @@
     .repo:hover { border-color: var(--cyan); }
     .triage-visual { width: 100%; height: 100%; padding: 28px; display: grid; align-content: center; gap: 12px; font: 500 13px/1.4 var(--mono); }
     .tv-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--soft); }
+    .term { width: 100%; height: 100%; padding: 26px 24px; display: grid; align-content: center; gap: 7px; font: 400 12.5px/1.5 var(--mono); color: var(--soft); }
+    .term .prompt { color: var(--white); margin-bottom: 6px; }
+    .term .prompt::before { content: "$ "; color: var(--faint); }
+    .term .ln { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 10px; }
+    .term span, .term .prompt { overflow-wrap: anywhere; }
+    .term { min-width: 0; }
+    .term .ln b { font-weight: 500; }
+    .term .k-model b { color: var(--purple); }
+    .term .k-call b { color: var(--pink); }
+    .term .k-res b { color: var(--cyan); }
+    .term .ok { margin-top: 6px; color: #34d399; }
     .tv-row small { display: block; color: var(--faint); font-size: 11.5px; margin-top: 3px; }
     .tag { padding: 4px 9px; border-radius: 7px; font-size: 11.5px; white-space: nowrap; }
     .tag.auto { color: #34d399; background: rgba(52,211,153,.1); }
     .tag.human { color: var(--pink); background: rgba(236,72,153,.12); }
     .tag.retry { color: var(--cyan); background: rgba(34,211,238,.1); }
+
+    .wip { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 24px; padding: 20px 24px; border-radius: 16px; border: 1px dashed var(--line-strong); background: rgba(17,17,31,.5); }
+    .wip-tag { font: 500 12px/1 var(--mono); color: var(--cyan); padding: 6px 10px; border-radius: 7px; background: rgba(34,211,238,.1); white-space: nowrap; }
+    .wip p { margin: 0; flex: 1 1 320px; font-size: 15.5px; }
+    .wip b { color: var(--white); font-weight: 600; }
+    .wip small { color: var(--faint); font: 500 12.5px/1 var(--mono); white-space: nowrap; }
 
     /* contact */
     .contact { text-align: center; padding: 120px 0 72px; border-top: 1px solid var(--line); position: relative; overflow: hidden; }
@@ -291,7 +308,7 @@
 
     /* ---------- responsive ---------- */
     @media (max-width: 980px) {
-      .hero .wrap, .about, .process, .project, .project.flip { grid-template-columns: 1fr; }
+      .hero .wrap, .about, .process, .project, .project.flip { grid-template-columns: minmax(0, 1fr); }
       .project.flip .media { order: 0; border-left: 0; }
       .media { border-right: 0; border-bottom: 1px solid var(--line); }
       .grid { grid-template-columns: 1fr 1fr; }
@@ -414,7 +431,7 @@
           <article class="card wide" data-tone="purple">
             <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg><h3>AI agents and tool use</h3></div>
             <p>Agents that call your real systems through typed tools, with step limits, retries and a full trace of every decision.</p>
-            <ul class="chips"><li>Anthropic API</li><li>OpenAI API</li><li>Tool calling</li><li>Agent loops</li><li>Streaming</li></ul>
+            <ul class="chips"><li>Anthropic API</li><li>OpenAI API</li><li>MCP</li><li>Tool calling</li><li>Agent loops</li><li>Streaming</li></ul>
           </article>
           <article class="card wide" data-tone="pink">
             <div class="card-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg><h3>Testing and evaluating AI</h3></div>
@@ -475,6 +492,33 @@
           </article>
           <article class="project flip">
             <div class="media">
+              <div class="term" aria-hidden="true">
+                <div class="prompt">helpdesk-agent "Triage the urgent open tickets"</div>
+                <div class="ln k-model"><b>model</b><span>I'll find the urgent open tickets first.</span></div>
+                <div class="ln k-call"><b>call</b><span>search_tickets(status=open, priority=urgent)</span></div>
+                <div class="ln k-call"><b>call</b><span>get_ticket(2), get_ticket(1), get_ticket(3)</span></div>
+                <div class="ln k-call"><b>call</b><span>search_kb("Teachers locked out after SSO change")</span></div>
+                <div class="ln k-res"><b>result</b><span>sso-setup: Setting up single sign-on</span></div>
+                <div class="ln k-call"><b>call</b><span>add_comment(3, internal note)</span></div>
+                <div class="ln k-model"><b>model</b><span>Left an internal note on each ticket. Nothing sent to customers.</span></div>
+                <div class="ok">CI passing, 40 tests</div>
+              </div>
+            </div>
+            <div class="body">
+              <span class="meta">Python, Model Context Protocol</span>
+              <h3>Helpdesk MCP server and triage agent</h3>
+              <p>A support helpdesk exposed as an MCP server that Claude Desktop or any MCP client can use, plus an agent that connects to it over MCP and triages tickets on its own.</p>
+              <ul class="points">
+                <li>Typed, validated tools with read-only and write annotations, and a read-only mode that hides write tools entirely</li>
+                <li>The agent asks a person before every write, keeps to a step limit, and every write is audited</li>
+                <li>40 tests through a real MCP client, including the server running as a subprocess over stdio</li>
+              </ul>
+              <ul class="chips"><li>Python</li><li>MCP</li><li>Pydantic</li><li>SQLite</li><li>pytest</li></ul>
+              <a class="repo" href="https://github.com/s-talha/helpdesk-mcp">View on GitHub</a>
+            </div>
+          </article>
+          <article class="project">
+            <div class="media">
               <div class="triage-visual" aria-hidden="true">
                 <div class="tv-row"><span>"How do I export my invoices?"<small>how_to, low risk</small></span><span class="tag auto">auto reply</span></div>
                 <div class="tv-row"><span>"I will take legal action"<small>legal threat, sensitive</small></span><span class="tag human">to a person</span></div>
@@ -494,6 +538,11 @@
               <a class="repo" href="https://github.com/s-talha/support-triage-agent-source">View on GitHub</a>
             </div>
           </article>
+        </div>
+        <div class="wip">
+          <span class="wip-tag">In progress</span>
+          <p><b>Real estate lead agent.</b> An AI agent that handles incoming leads for real estate brokers in the US market.</p>
+          <small>Private repo</small>
         </div>
       </div>
     </section>
